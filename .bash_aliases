@@ -1,0 +1,1 @@
+/mnt/c/Users/Owner/.bash_aliases
