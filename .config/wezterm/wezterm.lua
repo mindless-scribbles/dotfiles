@@ -22,6 +22,39 @@ local is_mac     = triple:find("darwin") ~= nil
 -- login shell, so WezTerm just does the right thing there with no config.
 if is_windows then
   config.default_prog = { "wsl.exe", "~" }
+
+  -- Extra Windows shells, opened in a NEW WINDOW so the tab bar can stay off
+  -- (keeps the Alacritty-clean look; your tmux/WSL window is untouched).
+  local win_shells = {
+    { label = "WSL",            args = { "wsl.exe", "~" } },
+    { label = "PowerShell",     args = { "powershell.exe", "-NoLogo" } },
+    { label = "PowerShell 7",   args = { "pwsh.exe", "-NoLogo" } },   -- needs PS7 installed
+    { label = "Command Prompt", args = { "cmd.exe" } },
+  }
+
+  local picker_choices = {}
+  for i, s in ipairs(win_shells) do
+    picker_choices[i] = { id = tostring(i), label = s.label }
+  end
+
+  config.keys = {
+    -- Ctrl+Shift+L: fuzzy-pick any shell -> opens it in a new window.
+    {
+      key = "L",
+      mods = "CTRL|SHIFT",
+      action = wezterm.action.InputSelector({
+        title = "Open a shell in a new window",
+        choices = picker_choices,
+        action = wezterm.action_callback(function(window, pane, id, _label)
+          if not id then return end -- cancelled
+          window:perform_action(
+            wezterm.action.SpawnCommandInNewWindow({ args = win_shells[tonumber(id)].args }),
+            pane
+          )
+        end),
+      }),
+    },
+  }
 end
 
 -- ── Font (identical everywhere for a consistent feel) ────────────────────
