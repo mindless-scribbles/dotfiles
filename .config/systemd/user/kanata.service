@@ -1,0 +1,14 @@
+[Unit]
+Description=kanata keyboard remapper (Caps: tap=Esc, hold=Ctrl)
+Documentation=https://github.com/jtroo/kanata
+After=graphical-session.target
+
+[Service]
+Type=simple
+# If kanata was installed via cargo, change this to %h/.cargo/bin/kanata
+ExecStart=/usr/bin/kanata --cfg %h/.config/kanata/kanata.kbd
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,25 @@
+;; ~/.config/kanata/kanata.kbd  (tracked in the ~/.dotfiles bare repo)
+;;
+;; Cross-platform kanata config — byte-identical on Linux and Windows.
+;; Caps Lock is a dual-role key:
+;;   tap  Caps        -> Esc   (vim escape)
+;;   hold Caps + key  -> Ctrl  (tmux prefix = Caps+a, and Ctrl everywhere)
+;;
+;; Linux (Omarchy):  run via the tracked systemd user unit (see README.md).
+;; Windows:          a copy at C:\Users\<user>\kanata.kbd is run by Task Scheduler.
+;; macOS:            NOT used here — see the Karabiner rule in
+;;                   ~/.config/karabiner/assets/complex_modifications/.
+
+(defcfg
+  process-unmapped-keys yes
+)
+
+(defsrc
+  caps
+)
+
+;; tap-hold-press: pressing another key while Caps is held commits to Ctrl
+;; immediately (no lag when chording Caps+a); a lone quick tap sends Esc.
+(deflayer base
+  (tap-hold-press 200 200 esc lctl)
+)
