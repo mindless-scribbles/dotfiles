@@ -27,6 +27,7 @@ if is_windows then
   -- (keeps the Alacritty-clean look; your tmux/WSL window is untouched).
   local win_shells = {
     { label = "WSL",            args = { "wsl.exe", "~" } },
+    { label = "Git Bash",       args = { "C:/Program Files/Git/bin/bash.exe", "-i", "-l" } },
     { label = "PowerShell",     args = { "powershell.exe", "-NoLogo" } },
     { label = "PowerShell 7",   args = { "pwsh.exe", "-NoLogo" } },   -- needs PS7 installed
     { label = "Command Prompt", args = { "cmd.exe" } },
