@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(unzip:*)"
+    ],
+    "defaultMode": "auto"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh"
+  },
+  "enabledPlugins": {
+    "vercel-plugin@vercel": true
+  },
+  "editorMode": "vim",
+  "skipAutoPermissionPrompt": true,
+  "skipWorkflowUsageWarning": true
+}

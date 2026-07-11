@@ -1,3 +1,15 @@
 **/.claude/settings.local.json
 .config/github-copilot/apps.json
 .config/github-copilot/hosts.json
+
+# Claude Code: sync portable config only — never secrets or runtime state.
+# Ignore everything under ~/.claude, then re-allow the config we want synced.
+.claude/*
+!.claude/CLAUDE.md
+!.claude/settings.json
+!.claude/statusline.sh
+!.claude/python-uv.md
+!.claude/maya-env-setup.md
+!.claude/commands/
+!.claude/templates/
+!.claude/memory/

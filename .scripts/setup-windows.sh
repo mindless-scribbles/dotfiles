@@ -42,6 +42,7 @@ pkg "node"     "OpenJS.NodeJS.LTS"           # TypeScript LSP, markdown-preview
 pkg "python3"  "Python.Python.3.12"          # Python LSP / venv-selector
 pkg "lazygit"  "JesseDuffield.lazygit"       # LazyVim git UI
 pkg "eza"      "eza-community.eza"           # ls aliases in .bash_aliases
+pkg "jq"       "jqlang.jq"                    # Claude Code status line (statusline.sh)
 
 # Treesitter needs a C compiler to build parsers
 if ! command -v gcc &>/dev/null && ! command -v clang &>/dev/null && ! command -v cc &>/dev/null; then
@@ -131,6 +132,16 @@ alias dotfiles='git --git-dir="$HOME/.dotfiles" --work-tree="$HOME"'
 [[ -f "$HOME/.bash_aliases" ]] && source "$HOME/.bash_aliases"
 EOF
     info "Configured $PROFILE"
+fi
+
+# ── 5. Claude Code memory ─────────────────────────────────────────────────────
+step "Claude Code memory"
+if [[ -f "$HOME/.scripts/link-claude-memory.sh" ]]; then
+    bash "$HOME/.scripts/link-claude-memory.sh" \
+        && info "Claude memory linked to canonical ~/.claude/memory" \
+        || warn "Could not link Claude memory — run ~/.scripts/link-claude-memory.sh manually"
+else
+    warn "link-claude-memory.sh not found — skipping (pull dotfiles, then run it)"
 fi
 
 # ── Done ──────────────────────────────────────────────────────────────────────

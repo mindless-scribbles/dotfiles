@@ -1,0 +1,4 @@
+# Keep shell scripts LF so bash / Git Bash can run them on Windows.
+# (Git for Windows defaults autocrlf=true, which would poison shebangs with \r.)
+*.sh text eol=lf
+statusline.sh text eol=lf
