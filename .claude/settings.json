@@ -9,8 +9,7 @@
   "model": "opus[1m]",
   "skillOverrides": {
     "maya-env": "off",
-    "maya-dev": "off",
-    "fable-orchestration": "off"
+    "maya-dev": "off"
   },
   "statusLine": {
     "type": "command",

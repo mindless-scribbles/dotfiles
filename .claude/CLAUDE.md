@@ -32,6 +32,8 @@ When the advisor tool is available, consult it:
 
 ## Agents
 
+Default for every session: the main session (Opus) executes, Fable advises through the advisor tool, and Sonnet `worker` agents take scoped changes.
+
 Custom agents live in `~/.claude/agents/`. Default routing:
 
 - Locating code (more than ~5 files to sweep): `explorer`, not the built-in `Explore`.
