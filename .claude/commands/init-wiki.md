@@ -35,6 +35,10 @@ If either path doesn't exist, clone it next to the other:
 
 If the `llm-wiki-site` command isn't on `PATH`, use `node "$BUILDER"/bin/cli.mjs` in its place throughout.
 
+Check for `mmdc` (`command -v mmdc`). It is optional: without it, diagrams stay code blocks on the
+site (Obsidian still draws them). If it's missing, note it for the report and suggest
+`npm i -g @mermaid-js/mermaid-cli`.
+
 ## Step 2: Copy the scaffold
 
 Copy everything except `.git/`, `raw/`, `site/`, and `LICENSE` into the current directory, **without clobbering anything that already exists**:
@@ -49,7 +53,10 @@ The template contains no `.mjs`, no `.js`, and no `site/`. If any appear in the 
 
 If `$ARGUMENTS` contains `--force`, drop `--ignore-existing` so template files are refreshed. `raw/` is excluded either way — the user's sources are never touched.
 
-`rsync -a` also brings the template's `.claude/` — including the **`add-tutorial`** skill (`.claude/skills/add-tutorial/SKILL.md`) — so every new wiki can turn a timecoded transcript into a step-by-step, timecode-linked tutorial out of the box. The matching timecode-popover rendering lives in the builder.
+`rsync -a` also brings the template's `.claude/` skills, so every new wiki has them out of the box:
+
+- **`add-tutorial`** (`.claude/skills/add-tutorial/SKILL.md`): a timecoded transcript becomes a step-by-step, timecode-linked tutorial. The timecode popovers render in the builder.
+- **`add-diagram`** (`.claude/skills/add-diagram/SKILL.md`): structure described in prose becomes a Mermaid diagram of the matching UML type (state, sequence, component). The builder renders it to inline SVG.
 
 Note which files were newly created vs. already present; you'll report this at the end. If `README.md` already existed, leave it alone (it's probably the user's, not the template's).
 
@@ -75,8 +82,9 @@ Edit `./CLAUDE.md` (the copy in the current directory, never the template):
 3. **Entity pages** — in Directory Layout and in "Required Sections by Page Type", replace the generic "(people, tools, organizations, products — whatever 'things' exist in your domain)" with the entity types that actually exist in these sources.
 4. **Tagging Taxonomy** — delete the `<!-- CUSTOMIZE -->` comment block and replace `Category-A/B/C` and `tag-1..9` with 2-4 real categories, 3-8 real tags each, drawn from Step 3. Keep the `Scope` and `Status` categories as-is unless they make no sense for the domain.
 5. **Confidence Levels** — adjust the descriptions only if the domain has a different evidence standard (e.g. peer-reviewed vs. anecdotal). Otherwise leave them.
+6. **Writing Rule → Terminology** — delete the `<!-- CUSTOMIZE -->` comment and replace the `[term]` placeholder row with 3–10 real rows drawn from Step 3. Look for things the sources name more than one way: an abbreviation and its long form (`PV` / `pole vector`), a product's old and new name, a vendor term and a generic one. Pick the one the sources use most for `Use`; list the others in `Not`; say why in `Note`. Only list a term in `Not` if it really means the same thing. If the sources are consistent, keep 2–3 rows rather than inventing conflicts. Leave the Writing Rule bullets themselves unchanged.
 
-Leave Workflows, Page Format, Linking Conventions, and Rules untouched — they're domain-agnostic and already correct.
+Leave Workflows, Page Format, Linking Conventions, Rules and the Writing Rule bullets untouched — they're domain-agnostic and already correct.
 
 ## Step 5: Customize the branding
 
@@ -146,6 +154,9 @@ LLM wiki initialized: <domain>
   ✓ registered        <slug> -> <out-path>
   ✓ site              built (empty) at <out-path>
   ✓ add-tutorial      skill installed (.claude/skills/) — timecode-linked step-by-steps
+  ✓ add-diagram       skill installed (.claude/skills/) — UML-type Mermaid diagrams
+                      (mmdc: <found | missing: diagrams stay code blocks on the site>)
+  ✓ writing rule      STE-80, <N> terminology rows; `llm-wiki-site lint --site <slug>` checks it
   ⏭  <file>            kept existing
   📄 raw/             <N> sources staged
 ```
