@@ -52,4 +52,4 @@ Never mark a task complete without running the tests and confirming they pass. I
 
 ## Context Management
 
-Use subagents for any investigation that requires reading more than 5 files. Keep the main context clean. Run /compact proactively when context usage exceeds 50%.
+Use subagents for any investigation that requires reading more than 5 files (`explorer` for code, `researcher` for docs; see the Agents section in `~/.claude/CLAUDE.md`). Keep the main context clean. Run /compact proactively when context usage exceeds 50%.

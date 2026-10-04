@@ -6,14 +6,37 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "opus",
+  "skillOverrides": {
+    "maya-env": "off",
+    "maya-dev": "off",
+    "fable-orchestration": "off"
+  },
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.sh"
   },
   "enabledPlugins": {
-    "vercel-plugin@vercel": true
+    "vercel-plugin@vercel": false,
+    "engineering@synced": false,
+    "design@synced": false,
+    "cowork-plugin-management@synced": false
   },
+  "modelSettings": {
+    "claude-opus-5": {
+      "effortLevel": "high"
+    },
+    "claude-fable-5-1": {
+      "effortLevel": "high"
+    },
+    "claude-opus-5-5": {
+      "effortLevel": "high"
+    }
+  },
+  "advisorModel": "fable",
+  "promptSuggestionEnabled": false,
+  "skipWorkflowUsageWarning": true,
   "editorMode": "vim",
-  "skipAutoPermissionPrompt": true,
-  "skipWorkflowUsageWarning": true
+  "verbose": false,
+  "skipAutoPermissionPrompt": true
 }

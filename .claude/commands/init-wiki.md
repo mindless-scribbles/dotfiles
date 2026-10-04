@@ -6,7 +6,15 @@ allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 
 Turn the current directory into an LLM wiki: copy the `llm-wiki` template scaffold in, then rewrite its placeholders so the schema actually describes the sources sitting in `./raw/`.
 
-The template is the repo at `~/workspace/github.com/mindless-scribbles/llm-wiki`. Treat it as read-only — never write into it.
+**Design system: DDC Reel.** Every wiki site (past and future) is styled with Don's DDC Reel
+design system: the `ddc-reel` skill (`~/.claude/skills/ddc-reel/`), artifact https://claude.ai/artifact/QBTm2jQ8DC1f9bjhwiuDvw.
+`llm-wiki-site` bakes it in, so the site needs no per-wiki styling beyond the four branding
+values in Step 5. Load the `ddc-reel` skill before making any other visual for the wiki
+(Marp decks, Artifacts, concept widgets).
+
+The wiki holds **markdown and nothing else** — it usually lives in an Obsidian vault, and Obsidian Sync carries only `*.md`. The static HTML site is built from the outside by a second repo, `llm-wiki-site`, which this command registers the new wiki with. Never scaffold a build script or a `site/` folder into the wiki.
+
+Both repos are read-only templates — never write into `llm-wiki`; the only thing you write into `llm-wiki-site` is the new wiki's own `sites/<slug>/` entry.
 
 ## Step 0: Sanity-check the location
 
@@ -18,10 +26,14 @@ Then confirm `./raw/` exists and contains at least one file other than `.gitkeep
 
 ```bash
 TPL=~/workspace/github.com/mindless-scribbles/llm-wiki
+BUILDER=~/workspace/github.com/mindless-scribbles/llm-wiki-site
 ```
 
-If that path doesn't exist, clone it to a scratch dir instead:
-`git clone --depth 1 https://github.com/mindless-scribbles/llm-wiki.git <scratch>/llm-wiki` and use that.
+If either path doesn't exist, clone it next to the other:
+`git clone https://github.com/mindless-scribbles/llm-wiki{,-site}.git`
+(the template may be a `--depth 1` clone; the builder should be a full clone since you write into it).
+
+If the `llm-wiki-site` command isn't on `PATH`, use `node "$BUILDER"/bin/cli.mjs` in its place throughout.
 
 ## Step 2: Copy the scaffold
 
@@ -33,7 +45,11 @@ rsync -a --ignore-existing \
   "$TPL"/ ./
 ```
 
+The template contains no `.mjs`, no `.js`, and no `site/`. If any appear in the target afterwards, something is wrong — say so rather than keeping them.
+
 If `$ARGUMENTS` contains `--force`, drop `--ignore-existing` so template files are refreshed. `raw/` is excluded either way — the user's sources are never touched.
+
+`rsync -a` also brings the template's `.claude/` — including the **`add-tutorial`** skill (`.claude/skills/add-tutorial/SKILL.md`) — so every new wiki can turn a timecoded transcript into a step-by-step, timecode-linked tutorial out of the box. The matching timecode-popover rendering lives in the builder.
 
 Note which files were newly created vs. already present; you'll report this at the end. If `README.md` already existed, leave it alone (it's probably the user's, not the template's).
 
@@ -62,14 +78,40 @@ Edit `./CLAUDE.md` (the copy in the current directory, never the template):
 
 Leave Workflows, Page Format, Linking Conventions, and Rules untouched — they're domain-agnostic and already correct.
 
-## Step 5: Customize site.config.json
+## Step 5: Customize the branding
 
-Write `./site.config.json` with real branding:
+Decide the four values first:
 
 - `title` — the knowledge base name (e.g. "Options Trading KB", not "Knowledge Base")
-- `brandLetters` — exactly 2 uppercase letters derived from the title (the header mark has two glyph slots; anything longer is truncated)
+- `brandLetters` — exactly 2 uppercase letters derived from the title (the short brand shown in the header on phones; anything longer is truncated)
 - `footer` — `SYS.<SHORT_SLUG>_WIKI / <current year>`, matching the template's `SYS.WIKI / 2026` shape
-- `accent` — a 3- or 6-digit hex color. Sibling wikis in the same folder share one accent as a design system, so **check them first** (`cat ../*/site.config.json`) and match. Only diverge if the user asks for a distinct color.
+- `accent` — DDC Reel's `#ff3300`. The design system allows one accent and every wiki shares it. Only use a different hex if the user asks for one.
+
+Then write them into the `site:` block of `./wiki/index.md`'s frontmatter (the template ships it pre-seeded with the defaults):
+
+```yaml
+site:
+  title: "Options Trading KB"
+  brandLetters: "OT"
+  footer: "SYS.OPTIONS_WIKI / 2026"
+  accent: "#ff3300"
+```
+
+This is the primary home because it is markdown, so it survives an Obsidian Sync that carries only `*.md`.
+
+Also write the same four values to `./site.config.json`. It takes precedence over the frontmatter and is what a plain-git wiki uses; keeping the two in step avoids a confusing split. If the wiki is inside an Obsidian vault, say so in the final report — the JSON file will not sync, and the frontmatter is what will actually be doing the work.
+
+## Step 5b: Register the wiki with the builder
+
+Pick a slug (the folder's basename is usually right) and register it, so future rebuilds are a single flag and the site lands **outside** the wiki.
+
+First run `llm-wiki-site vault`. If no vault root is set and this wiki sits inside an Obsidian vault, set it to the vault's root folder (`llm-wiki-site vault <vault-path>`) so the registration stores a relative path and works on Don's other machines too.
+
+```bash
+llm-wiki-site register <slug> "$PWD" --out ~/sites/<slug>
+```
+
+Confirm with `llm-wiki-site list`. If the user has a preferred output location, use that for `--out` instead.
 
 ## Step 6: Seed index.md and log.md
 
@@ -89,7 +131,7 @@ Get the real date/time from `date -u '+%Y-%m-%d %H:%M'`.
 
 ## Step 7: Build the empty site
 
-Run `node build-site.mjs` to confirm the toolchain works before any content exists. If it fails, report the error — don't try to patch the build script.
+Run `llm-wiki-site build --site <slug>` to confirm the toolchain works before any content exists. Note the output path it prints. If it fails, report the error — don't try to patch the build script.
 
 ## Step 8: Report, then offer to ingest
 
@@ -98,14 +140,20 @@ Print a compact summary:
 ```
 LLM wiki initialized: <domain>
   ✓ CLAUDE.md         adapted (entities: <types>, tags: <N> across <M> categories)
-  ✓ site.config.json  <title> / <brandLetters> / <accent>
-  ✓ wiki/             scaffolded, index + log seeded
-  ✓ site/             built (empty)
+  ✓ branding          <title> / <brandLetters> / <accent>  (DDC Reel design system)
+                      (wiki/index.md frontmatter + site.config.json)
+  ✓ wiki/             scaffolded, index + log seeded — markdown only
+  ✓ registered        <slug> -> <out-path>
+  ✓ site              built (empty) at <out-path>
+  ✓ add-tutorial      skill installed (.claude/skills/) — timecode-linked step-by-steps
   ⏭  <file>            kept existing
   📄 raw/             <N> sources staged
 ```
 
+If any staged sources are timecoded transcripts (headings like `## MM:SS`), mention that
+`/add-tutorial` (or "make a step-by-step from <source>") can turn them into timecode-linked tutorials.
+
 Then:
 
-- If `$ARGUMENTS` contains `--ingest`, immediately run the **Ingest** workflow from the newly written `CLAUDE.md` for every source in `raw/`, oldest first. Follow that workflow exactly, including the final `node build-site.mjs`.
+- If `$ARGUMENTS` contains `--ingest`, immediately run the **Ingest** workflow from the newly written `CLAUDE.md` for every source in `raw/`, oldest first. Follow that workflow exactly, including the final `llm-wiki-site build --site <slug>`.
 - Otherwise, list the staged sources and ask whether to ingest them now, all at once or one at a time.
