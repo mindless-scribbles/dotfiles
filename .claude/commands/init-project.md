@@ -38,6 +38,8 @@ Read the template at `~/.claude/templates/project-init/CLAUDE.template.md`. Repl
 - `[PROJECT_NAME]: [Brief description of what this project does]` → real project name and 1-2 sentence description (from README if available; otherwise infer from directory name + top-level structure).
 - The four Code Style placeholder lines → real values detected in Step 2 (or leave as `[fill in later]` if unknown).
 
+Every other section — including **"Agent Orchestration (Fable Sessions)"** — is fixed behavioral policy, not project documentation. Copy it verbatim; never adapt, trim, or drop it per-stack.
+
 Write the result to `./CLAUDE.md` (respecting the overwrite/preserve/skip choice from Step 1).
 
 ## Step 4: Write STATUS.md

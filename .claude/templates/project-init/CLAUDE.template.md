@@ -53,3 +53,16 @@ Never mark a task complete without running the tests and confirming they pass. I
 ## Context Management
 
 Use subagents for any investigation that requires reading more than 5 files (`explorer` for code, `researcher` for docs; see the Agents section in `~/.claude/CLAUDE.md`). Keep the main context clean. Run /compact proactively when context usage exceeds 50%.
+
+## Agent Orchestration (Fable Sessions)
+
+When the session is running on a Fable-class model, Claude is the **orchestrator and reviewer ONLY — it does no work itself.** All work — codebase exploration, file reading beyond a quick orientation, MCP/tool driving, builds, implementation, doc drafting — is delegated to agents, picking per task the agent type and model best suited to it, without asking first. What stays in the main session: briefing agents with established context, reviewing their output/diffs, verdicts, and design decisions.
+
+The only exception is a single one-off orienting call (one read, one status check). Sustained tool-driving or multi-file reading in the main loop violates this rule.
+
+**Hard constraint: never spend tokens that are not necessary — main-session (Fable) tokens are the most expensive tokens there are.**
+
+- Match the model to the task: the cheapest model that can do the job well (mechanical sweeps and boilerplate down-tier; judgment-heavy implementation inherits the session model). When unsure, inherit.
+- No speculative agents, no parallel duplicates of one task, no agent for what a direct read or a grep answers.
+- Don't re-derive what the session, the docs, or a prior agent already established — brief agents with it instead.
+- Sequential steps on shared files get one agent at a time; parallelism only when the work is genuinely independent.
