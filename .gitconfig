@@ -5,10 +5,10 @@
 	defaultbranch = main
 [credential "https://github.com"]
 	helper = 
-	helper = !/home/ddecastro/.local/bin/gh auth git-credential
+	helper = !gh auth git-credential
 [credential "https://gist.github.com"]
 	helper = 
-	helper = !/home/ddecastro/.local/bin/gh auth git-credential
+	helper = !gh auth git-credential
 [pull]
 	rebase = true
 [credential]
