@@ -8,3 +8,4 @@ originSessionId: ed46d82f-dba0-4470-b2e2-8e0352d338ad
 - Machines: WSL2 (primary), Windows, Omarchy laptop — all sync the same dotfiles
 - Neovim with lazy.nvim; copilot.vim (github/copilot.vim), keybindings in `~/.config/nvim/lua/plugins/copilot.lua`
 - GitHub username: mindless-scribbles
+- Global Claude skills live in a separate repo, `mindless-scribbles/claude-skills`, cloned to `~/.claude/skills` (on WSL2 that is a symlink to `C:\Users\Owner\.claude\skills`). `~/.scripts/sync-claude-skills.sh` clones or pulls it.

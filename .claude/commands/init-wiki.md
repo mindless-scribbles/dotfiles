@@ -55,8 +55,12 @@ If `$ARGUMENTS` contains `--force`, drop `--ignore-existing` so template files a
 
 `rsync -a` also brings the template's `.claude/` skills, so every new wiki has them out of the box:
 
-- **`add-tutorial`** (`.claude/skills/add-tutorial/SKILL.md`): a timecoded transcript becomes a step-by-step, timecode-linked tutorial. The timecode popovers render in the builder.
 - **`add-diagram`** (`.claude/skills/add-diagram/SKILL.md`): structure described in prose becomes a Mermaid diagram of the matching UML type (state, sequence, component). The builder renders it to inline SVG.
+
+Two global skills (in `~/.claude/skills/`, not copied) work in every wiki:
+
+- **`add-lesson`**: the teaching layer on top of the reference wiki. It drafts a syllabus, then writes `type: lesson` pages (workshop days or tutorials), each phase led by its Why, with a visual or a capture slot per phase. Evidence comes from a reference snapshot in `raw/` or from a timecoded transcript (timecode pills).
+- **`work-notes`**: the review loop. Don reads the site on `llm-wiki-site serve` and leaves content or design notes; this skill works them.
 
 Note which files were newly created vs. already present; you'll report this at the end. If `README.md` already existed, leave it alone (it's probably the user's, not the template's).
 
@@ -153,16 +157,17 @@ LLM wiki initialized: <domain>
   ✓ wiki/             scaffolded, index + log seeded — markdown only
   ✓ registered        <slug> -> <out-path>
   ✓ site              built (empty) at <out-path>
-  ✓ add-tutorial      skill installed (.claude/skills/) — timecode-linked step-by-steps
   ✓ add-diagram       skill installed (.claude/skills/) — UML-type Mermaid diagrams
                       (mmdc: <found | missing: diagrams stay code blocks on the site>)
   ✓ writing rule      STE-80, <N> terminology rows; `llm-wiki-site lint --site <slug>` checks it
   ⏭  <file>            kept existing
   📄 raw/             <N> sources staged
+  👁  review           llm-wiki-site serve  →  http://127.0.0.1:4173/<slug>/  (notes always on)
 ```
 
-If any staged sources are timecoded transcripts (headings like `## MM:SS`), mention that
-`/add-tutorial` (or "make a step-by-step from <source>") can turn them into timecode-linked tutorials.
+If the sources are a course, a workshop, lecture transcripts (headings like `## MM:SS`) or a
+reference project to teach from, mention that `add-lesson` builds the teaching layer after the
+ingest: a syllabus first, then one pilot lesson to review on the site.
 
 Then:
 

@@ -144,6 +144,15 @@ else
     warn "link-claude-memory.sh not found — skipping (pull dotfiles, then run it)"
 fi
 
+# ── 6. Claude Code skills ─────────────────────────────────────────────────────
+step "Claude Code skills"
+if [[ -f "$HOME/.scripts/sync-claude-skills.sh" ]]; then
+    bash "$HOME/.scripts/sync-claude-skills.sh" \
+        || warn "Could not sync skills — run ~/.scripts/sync-claude-skills.sh manually"
+else
+    warn "sync-claude-skills.sh not found — skipping (pull dotfiles, then run it)"
+fi
+
 # ── Done ──────────────────────────────────────────────────────────────────────
 echo ""
 echo -e "${GREEN}┌─────────────────────────────────────────┐${NC}"
