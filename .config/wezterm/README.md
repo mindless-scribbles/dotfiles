@@ -25,6 +25,7 @@ Adjust `Ubuntu` (WSL distro) and `ddecastro` (user) in the path if they differ.
 
 ## Editing
 
-Edit `~/.config/wezterm/wezterm.lua` from WSL as normal. WezTerm auto-reloads
-on save (the shim registers the file in the reload watch list). Commit with the
-`dotfiles` alias.
+Edit `~/.config/wezterm/wezterm.lua` from WSL as normal. The shim registers the
+file in the reload watch list, but change notifications over the
+`\\wsl.localhost` UNC path don't fire reliably, so press **Ctrl+Shift+R** after
+saving to reload. Commit with the `dotfiles` alias.

@@ -65,6 +65,14 @@ config.mouse_bindings = {
 		mods = "CTRL|SHIFT",
 		action = wezterm.action.StartWindowDrag,
 	},
+	-- Same drag inside tmux (mouse on): holding SHIFT bypasses tmux's mouse
+	-- capture, but WezTerm strips SHIFT before matching, so Ctrl+Shift+drag
+	-- arrives here as CTRL only.
+	{
+		event = { Drag = { streak = 1, button = "Left" } },
+		mods = "CTRL",
+		action = wezterm.action.StartWindowDrag,
+	},
 }
 -- ── Font (identical everywhere for a consistent feel) ────────────────────
 -- Install "JetBrainsMono Nerd Font" on each machine:
