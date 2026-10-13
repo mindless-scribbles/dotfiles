@@ -11,6 +11,8 @@ Repos under `~/workspace/` should follow the three-file session loop: `CLAUDE.md
 - Templates live in `~/workspace/github.com/mindless-scribbles/claude-project-templates/project-init/` (CLAUDE/STATUS/LESSONS as `*.template.md`); `~/.claude/templates/project-init` is a symlink to that folder, so edit them in the repo.
 - To bootstrap a repo: run `/init-project` (slash command at `~/.claude/commands/init-project.md`).
 - When entering a new session in a repo that has these files, read `STATUS.md` and `LESSONS.md` before doing anything else.
+- If the working folder has a `HANDOFF.md` (written by the cache-clock mod when a session went idle before its prompt cache went cold), read it first and check its header line (`session= written= branch= head=`). If the branch or HEAD differs from the repo's now, or it's over 24 hours old (file time when there's no header), say it's stale and don't offer to continue. Otherwise say in one line what it covers and how old it is, and offer to continue from it; that's far cheaper than resuming the old session. Either way the mod deletes the note after this first turn, so its content lives on only in this conversation.
+- When refreshing STATUS.md at wrap-up, fold anything still live from `HANDOFF.md` into it and delete the handoff.
 
 ## LLM wikis
 

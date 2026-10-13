@@ -1,5 +1,4 @@
 {
-  "autoUpdatesChannel": "latest",
   "permissions": {
     "allow": [
       "Bash(unzip:*)"
@@ -19,7 +18,25 @@
     "vercel-plugin@vercel": false,
     "engineering@synced": false,
     "design@synced": false,
-    "cowork-plugin-management@synced": false
+    "cowork-plugin-management@synced": false,
+    "diagram-design@diagram-design": true,
+    "cache-clock@ddc": true,
+    "decision-tree@ddc": true,
+    "diagram-pane@ddc": true
+  },
+  "extraKnownMarketplaces": {
+    "diagram-design": {
+      "source": {
+        "source": "github",
+        "repo": "cathrynlavery/diagram-design"
+      }
+    },
+    "ddc": {
+      "source": {
+        "source": "directory",
+        "path": "/home/ddecastro/workspace/github.com/mindless-scribbles/claude-project-templates"
+      }
+    }
   },
   "modelSettings": {
     "claude-opus-5": {
@@ -34,6 +51,8 @@
   },
   "advisorModel": "fable",
   "promptSuggestionEnabled": false,
+  "autoUpdatesChannel": "latest",
+  "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
   "editorMode": "vim",
   "verbose": false,
