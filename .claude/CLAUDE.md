@@ -8,7 +8,7 @@
 
 Repos under `~/workspace/` should follow the three-file session loop: `CLAUDE.md` (project doc + session-continuity rules), `STATUS.md` (last session, files modified, next steps), `LESSONS.md` (running list of project lessons).
 
-- Templates live at `~/.claude/templates/project-init/` (CLAUDE/STATUS/LESSONS as `*.template.md`).
+- Templates live in `~/workspace/github.com/mindless-scribbles/claude-project-templates/project-init/` (CLAUDE/STATUS/LESSONS as `*.template.md`); `~/.claude/templates/project-init` is a symlink to that folder, so edit them in the repo.
 - To bootstrap a repo: run `/init-project` (slash command at `~/.claude/commands/init-project.md`).
 - When entering a new session in a repo that has these files, read `STATUS.md` and `LESSONS.md` before doing anything else.
 
