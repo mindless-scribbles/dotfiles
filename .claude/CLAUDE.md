@@ -10,7 +10,7 @@ Repos under `~/workspace/` should follow the three-file session loop: `CLAUDE.md
 
 - Templates live in `~/workspace/github.com/mindless-scribbles/claude-project-templates/project-init/` (CLAUDE/STATUS/LESSONS as `*.template.md`); `~/.claude/templates/project-init` is a symlink to that folder, so edit them in the repo.
 - To bootstrap a repo: run `/init-project` (slash command at `~/.claude/commands/init-project.md`).
-- When entering a new session in a repo that has these files, read `STATUS.md` and `LESSONS.md` before doing anything else.
+- When starting a session in a repo that has these files, read `STATUS.md` and `LESSONS.md` first to orient before changing anything.
 - If the working folder has a `HANDOFF.md` (written by the cache-clock mod when a session went idle before its prompt cache went cold), read it first and check its header line (`session= written= branch= head=`). If the branch or HEAD differs from the repo's now, or it's over 24 hours old (file time when there's no header), say it's stale and don't offer to continue. Otherwise say in one line what it covers and how old it is, and offer to continue from it; that's far cheaper than resuming the old session. Either way the mod deletes the note after this first turn, so its content lives on only in this conversation.
 - When refreshing STATUS.md at wrap-up, fold anything still live from `HANDOFF.md` into it and delete the handoff.
 
@@ -26,11 +26,7 @@ For any Artifact, HTML page, mockup, deck, Design canvas, social card or other v
 
 ## Advisor
 
-When the advisor tool is available, consult it:
-
-- before starting a risky plan (destructive, hard to reverse, or touching many files)
-- after the same error occurs twice, before trying another fix
-- before accepting complex work as complete
+When the advisor tool is available, follow its own guidance on when to call it. Beyond that, also consult it before a destructive or hard-to-reverse plan, and after the same error occurs twice.
 
 ## Agents
 
@@ -38,7 +34,7 @@ Default for every session: the main session (Opus) executes, Fable advises throu
 
 Custom agents live in `~/.claude/agents/`. Default routing:
 
-- Locating code (more than ~5 files to sweep): `explorer`, not the built-in `Explore`.
+- Broad code searches where only the locations matter: `explorer`, not the built-in `Explore`.
 - Questions answered by docs, API references or changelogs: `researcher`.
 - Executing an approved plan step: `worker`, not `general-purpose`. One scoped change per worker; run independent workers in parallel.
 - Planning, design decisions and final verification stay in the main session (plus the advisor).
