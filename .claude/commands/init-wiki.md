@@ -35,10 +35,6 @@ If either path doesn't exist, clone it next to the other:
 
 If the `llm-wiki-site` command isn't on `PATH`, use `node "$BUILDER"/bin/cli.mjs` in its place throughout.
 
-Check for `mmdc` (`command -v mmdc`). It is optional: without it, diagrams stay code blocks on the
-site (Obsidian still draws them). If it's missing, note it for the report and suggest
-`npm i -g @mermaid-js/mermaid-cli`.
-
 ## Step 2: Copy the scaffold
 
 Copy everything except `.git/`, `raw/`, `site/`, and `LICENSE` into the current directory, **without clobbering anything that already exists**:
@@ -53,12 +49,9 @@ The template contains no `.mjs`, no `.js`, and no `site/`. If any appear in the 
 
 If `$ARGUMENTS` contains `--force`, drop `--ignore-existing` so template files are refreshed. `raw/` is excluded either way — the user's sources are never touched.
 
-`rsync -a` also brings the template's `.claude/` skills, so every new wiki has them out of the box:
+Three global skills (in `~/.claude/skills/`, not copied) work in every wiki:
 
-- **`add-diagram`** (`.claude/skills/add-diagram/SKILL.md`): structure described in prose becomes a Mermaid diagram of the matching UML type (state, sequence, component). The builder renders it to inline SVG.
-
-Two global skills (in `~/.claude/skills/`, not copied) work in every wiki:
-
+- **`add-diagram`**: structure described in prose becomes an editorial SVG, mounted with `@diagram[slug] caption`. The SVG lives in the builder at `sites/<wiki-id>/diagrams/`, never in the vault; a missing one shows a "Diagram needed" slot in review mode. Mermaid is retired for new diagrams (the builder still renders old fences), so `mmdc` is not needed.
 - **`add-lesson`**: the teaching layer on top of the reference wiki. It drafts a syllabus, then writes `type: lesson` pages (workshop days or tutorials), each phase led by its Why, with a visual or a capture slot per phase. Evidence comes from a reference snapshot in `raw/` or from a timecoded transcript (timecode pills).
 - **`work-notes`**: the review loop. Don reads the site on `llm-wiki-site serve` and leaves content or design notes; this skill works them.
 
@@ -157,8 +150,8 @@ LLM wiki initialized: <domain>
   ✓ wiki/             scaffolded, index + log seeded — markdown only
   ✓ registered        <slug> -> <out-path>
   ✓ site              built (empty) at <out-path>
-  ✓ add-diagram       skill installed (.claude/skills/) — UML-type Mermaid diagrams
-                      (mmdc: <found | missing: diagrams stay code blocks on the site>)
+  ✓ add-diagram       global skill — editorial SVG diagrams via `@diagram[slug]`
+                      (SVGs live in the builder at sites/<slug>/diagrams/)
   ✓ writing rule      STE-80, <N> terminology rows; `llm-wiki-site lint --site <slug>` checks it
   ⏭  <file>            kept existing
   📄 raw/             <N> sources staged
